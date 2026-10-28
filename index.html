@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PennyPilot | Personal Finance Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- LOGIN PAGE -->
+    <section id="authPage" class="auth-page">
+        <div class="auth-card">
+            <div class="brand-logo">₹</div>
+            <h1>PennyPilot</h1>
+            <p class="subtitle">Your money. Your control.</p>
+
+            <div class="auth-tabs">
+                <button id="loginTab" class="auth-tab active">Login</button>
+                <button id="registerTab" class="auth-tab">Create Account</button>
+            </div>
+
+            <form id="authForm">
+                <label for="authName" id="nameLabel" class="hidden">Full Name</label>
+                <input id="authName" class="hidden" type="text"
+                       placeholder="Enter your name">
+
+                <label for="authEmail">Email</label>
+                <input id="authEmail" type="email"
+                       placeholder="Enter your email" required>
+
+                <label for="authPassword">Password</label>
+                <input id="authPassword" type="password"
+                       placeholder="Enter your password"
+                       minlength="4" required>
+
+                <button id="authSubmit" class="primary-btn full-width"
+                        type="submit">Login</button>
+            </form>
+
+            <p class="auth-note">
+                Your personal finance dashboard starts here.
+            </p>
+        </div>
+    </section>
+
+    <!-- MAIN APPLICATION -->
+    <div id="appPage" class="app hidden">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <span class="brand-icon">₹</span>
+                <div>
+                    <h2>PennyPilot</h2>
+                    <small>Finance Manager</small>
+                </div>
+            </div>
+
+            <div class="sidebar-label">MENU</div>
+
+            <nav class="side-nav">
+                <button class="nav-item active" data-section="dashboard">
+                    <span>▦</span> Dashboard
+                </button>
+
+                <button class="nav-item" data-section="transactions">
+                    <span>⇄</span> Transactions
+                </button>
+
+                <button class="nav-item" data-section="budgets">
+                    <span>◉</span> Budgets
+                </button>
+
+                <button class="nav-item" data-section="reports">
+                    <span>▤</span> Reports & Analytics
+                </button>
+
+                <button class="nav-item" data-section="calendar">
+                    <span>▦</span> Expense Calendar
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="mini-profile">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div class="profile-info">
+                        <strong id="sidebarUser">User</strong>
+                        <small>Personal Account</small>
+                    </div>
+                </div>
+
+                <button id="logoutBtn" class="logout-btn">
+                    ⇥ Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow">PERSONAL FINANCE</p>
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+
+                <div class="topbar-right">
+                    <div class="date-badge" id="todayDate"></div>
+                    <button id="quickAddBtn" class="primary-btn">
+                        + Add Transaction
+                    </button>
+                </div>
+            </header>
+
+            <!-- DASHBOARD -->
+            <section id="dashboardSection" class="content-section">
+
+                <div class="welcome-banner">
+                    <div>
+                        <p class="welcome-small">WELCOME BACK</p>
+                        <h2>Hello, <span id="welcomeName">User</span>! 👋</h2>
+                        <p>Here is your financial overview.</p>
+                    </div>
+                    <div class="welcome-symbol">₹</div>
+                </div>
+
+                <div class="stats-grid">
+
+                    <article class="stat-card balance-card">
+                        <div class="stat-top">
+                            <span>Total Balance</span>
+                            <span class="stat-icon purple-icon">₹</span>
+                        </div>
+                        <h2 id="totalBalance">₹0.00</h2>
+                        <p>Income minus expenses</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Income</span>
+                            <span class="stat-icon green-icon">↗</span>
+                        </div>
+                        <h2 id="totalIncome" class="income-text">₹0.00</h2>
+                        <p>Money received</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Total Expenses</span>
+                            <span class="stat-icon red-icon">↘</span>
+                        </div>
+                        <h2 id="totalExpenses" class="expense-text">₹0.00</h2>
+                        <p>Money spent</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top">
+                            <span>Monthly Savings</span>
+                            <span class="stat-icon blue-icon">◈</span>
+                        </div>
+                        <h2 id="monthlySavings">₹0.00</h2>
+                        <p>This month income − expenses</p>
+                    </article>
+
+                </div>
+
+                <div class="dashboard-grid">
+
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Income vs Expenses</h3>
+                                <p>Current month overview</p>
+                            </div>
+                            <span class="panel-tag">MONTHLY</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="incomeExpenseChart"></canvas>
+                        </div>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Expense Categories</h3>
+                                <p>Where your money goes</p>
+                            </div>
+                        </div>
+                        <div id="categoryChart" class="category-chart"></div>
+                    </article>
+
+                </div>
+
+                <article class="panel recent-panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Recent Transactions</h3>
+                            <p>Your latest financial activity</p>
+                        </div>
+                        <button class="text-btn" data-go="transactions">
+                            View All →
+                        </button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="recentEmpty" class="empty-state hidden">
+                        <div class="empty-icon">↗</div>
+                        <h3>No transactions yet</h3>
+                        <p>Add your first income or expense to get started.</p>
+                    </div>
+                </article>
+
+            </section>
+
+            <!-- TRANSACTIONS -->
+            <section id="transactionsSection"
+                     class="content-section hidden">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Transaction History</h2>
+                        <p>Search, filter and manage your transactions.</p>
+                    </div>
+                    <button id="transactionAddBtn" class="primary-btn">
+                        + New Transaction
+                    </button>
+                </div>
+
+                <article class="panel">
+                    <div class="filters-grid">
+                        <input id="searchInput" type="search"
+                               placeholder="🔍 Search description or notes...">
+
+                        <select id="typeFilter">
+                            <option value="all">All Types</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+
+                        <select id="categoryFilter">
+                            <option value="all">All Categories</option>
+                            <option>Salary</option>
+                            <option>Food</option>
+                            <option>Transport</option>
+                            <option>Shopping</option>
+                            <option>Education</option>
+                            <option>Bills</option>
+                            <option>Health</option>
+                            <option>Entertainment</option>
+                            <option>Other</option>
+                        </select>
+
+                        <input id="fromDate" type="date" title="From date">
+                        <input id="toDate" type="date" title="To date">
+
+                        <button id="resetFiltersBtn" class="secondary-btn">
+                            Reset
+                        </button>
+                    </div>
+
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th>Payment</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionsTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="transactionEmpty" class="empty-state hidden">
+                        <div class="empty-icon">⇄</div>
+                        <h3>No transactions found</h3>
+                        <p>Try changing your search or add a transaction.</p>
+                    </div>
+
+                    <div class="table-footer">
+                        <span id="transactionCount">0 transactions</span>
+                        <button id="exportCsvBtn" class="secondary-btn">
+                            ↓ Export CSV
+                        </button>
+                    </div>
+                </article>
+            </section>
+
+            <!-- BUDGETS -->
+            <section id="budgetsSection" class="content-section hidden">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Monthly Budgets</h2>
+                        <p>Set spending limits and track your expenses.</p>
+                    </div>
+                </div>
+
+                <article class="panel budget-form-panel">
+                    <h3>Create or Update Budget</h3>
+
+                    <form id="budgetForm" class="budget-form">
+                        <div>
+                            <label for="budgetCategory">Category</label>
+                            <select id="budgetCategory" required>
+                                <option value="Food">Food</option>
+                                <option value="Transport">Transport</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Education">Education</option>
+                                <option value="Bills">Bills</option>
+                                <option value="Health">Health</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="budgetAmount">Monthly Limit (₹)</label>
+                            <input id="budgetAmount" type="number"
+                                   min="1" step="0.01" required
+                                   placeholder="Enter limit">
+                        </div>
+
+                        <button class="primary-btn" type="submit">
+                            Save Budget
+                        </button>
+                    </form>
+                </article>
+
+                <div id="budgetAlerts"></div>
+                <div id="budgetsList" class="budget-grid"></div>
+
+                <div id="budgetEmpty" class="empty-state hidden">
+                    <div class="empty-icon">◉</div>
+                    <h3>No budgets created</h3>
+                    <p>Create a budget to monitor your spending.</p>
+                </div>
+
+            </section>
+
+            <!-- REPORTS -->
+            <section id="reportsSection" class="content-section hidden">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Reports & Analytics</h2>
+                        <p>Understand your spending and financial habits.</p>
+                    </div>
+                    <button id="reportExportBtn" class="secondary-btn">
+                        ↓ Export CSV
+                    </button>
+                </div>
+
+                <div class="stats-grid report-stats">
+                    <article class="stat-card">
+                        <div class="stat-top"><span>All-Time Income</span></div>
+                        <h2 id="reportIncome" class="income-text">₹0.00</h2>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top"><span>All-Time Expenses</span></div>
+                        <h2 id="reportExpenses" class="expense-text">₹0.00</h2>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top"><span>Net Savings</span></div>
+                        <h2 id="reportSavings">₹0.00</h2>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-top"><span>Transactions</span></div>
+                        <h2 id="reportCount">0</h2>
+                    </article>
+                </div>
+
+                <div class="dashboard-grid">
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Monthly Trend</h3>
+                                <p>Income and expenses over six months</p>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </article>
+
+                    <article class="panel">
+                        <div class="panel-heading">
+                            <div>
+                                <h3>Category Analysis</h3>
+                                <p>Expense distribution</p>
+                            </div>
+                        </div>
+                        <div id="reportCategories" class="category-chart"></div>
+                    </article>
+                </div>
+
+                <article class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3>Financial Summary</h3>
+                            <p>Income, expenses and net balance</p>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportSummaryBody"></tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <!-- CALENDAR -->
+            <section id="calendarSection" class="content-section hidden">
+
+                <div class="section-intro">
+                    <div>
+                        <h2>Expense Calendar</h2>
+                        <p>View your daily income and expense activity.</p>
+                    </div>
+                </div>
+
+                <article class="panel">
+                    <div class="calendar-toolbar">
+                        <button id="prevMonthBtn" class="secondary-btn">←</button>
+                        <h3 id="calendarMonthTitle"></h3>
+                        <button id="nextMonthBtn" class="secondary-btn">→</button>
+                    </div>
+
+                    <div class="calendar-grid" id="calendarGrid"></div>
+
+                    <div class="calendar-legend">
+                        <span><i class="legend-income"></i> Income</span>
+                        <span><i class="legend-expense"></i> Expense</span>
+                    </div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-heading">
+                        <div>
+                            <h3 id="selectedDateTitle">Daily Transactions</h3>
+                            <p>Transactions for the selected date</p>
+                        </div>
+                    </div>
+                    <div id="dailyTransactions"></div>
+                </article>
+
+            </section>
+
+            <footer class="app-footer">
+                <span>© <span id="footerYear"></span> PennyPilot</span>
+                <span>Manage money mindfully.</span>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- ADD / EDIT TRANSACTION MODAL -->
+    <div id="transactionModal" class="modal hidden">
+        <div class="modal-backdrop" data-close-modal></div>
+
+        <div class="modal-card">
+            <div class="modal-heading">
+                <div>
+                    <p class="eyebrow">FINANCIAL ACTIVITY</p>
+                    <h2 id="modalTitle">Add Transaction</h2>
+                </div>
+                <button id="closeModalBtn" class="close-btn"
+                        type="button">×</button>
+            </div>
+
+            <form id="transactionForm">
+
+                <input id="transactionId" type="hidden">
+
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="transactionType">Transaction Type *</label>
+                        <select id="transactionType" required>
+                            <option value="expense">Expense</option>
+                            <option value="income">Income</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="transactionAmount">Amount (₹) *</label>
+                        <input id="transactionAmount" type="number"
+                               min="0.01" step="0.01" required
+                               placeholder="0.00">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="transactionDescription">Description *</label>
+                        <input id="transactionDescription" type="text"
+                               maxlength="100" required
+                               placeholder="e.g. Monthly salary">
+                    </div>
+
+                    <div class="form-field">
+                        <label for="transactionCategory">Category *</label>
+                        <select id="transactionCategory" required>
+                            <option value="Food">Food</option>
+                            <option value="Transport">Transport</option>
+                            <option value="Shopping">Shopping</option>
+                            <option value="Education">Education</option>
+                            <option value="Bills">Bills</option>
+                            <option value="Health">Health</option>
+                            <option value="Entertainment">Entertainment</option>
+                            <option value="Salary">Salary</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="transactionDate">Date *</label>
+                        <input id="transactionDate" type="date" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="paymentMethod">Payment Method</label>
+                        <select id="paymentMethod">
+                            <option>Cash</option>
+                            <option>UPI</option>
+                            <option>Debit Card</option>
+                            <option>Credit Card</option>
+                            <option>Bank Transfer</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="expenseNature">Expense Nature</label>
+                        <select id="expenseNature">
+                            <option value="necessary">Necessary</option>
+                            <option value="unnecessary">Non-essential</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="transactionNotes">Notes</label>
+                        <input id="transactionNotes" type="text"
+                               maxlength="250"
+                               placeholder="Optional notes">
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="cancelModalBtn" class="secondary-btn"
+                            type="button">Cancel</button>
+                    <button class="primary-btn" type="submit">
+                        Save Transaction
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirmModal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-card confirm-card">
+            <div class="confirm-icon">!</div>
+            <h2 id="confirmTitle">Confirm Action</h2>
+            <p id="confirmMessage">Are you sure?</p>
+
+            <div class="modal-actions">
+                <button id="confirmCancelBtn" class="secondary-btn"
+                        type="button">Cancel</button>
+                <button id="confirmYesBtn" class="danger-btn"
+                        type="button">Yes, Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST MESSAGES -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
